@@ -1,0 +1,10 @@
+En el Case 7 se dan diferentes filtros, para determinar las diferentes acciones que se ejecutan, se recomienda no haber borrando ninguna modificacion
+del archivo historial para poder evidenciar todos los tipos de filtros
+
+Se mostrara la accion tal cual como esta en el archivo de historial, si en este archivo dice
+HISTORIAL DE MODIFICACIONES GENERALES DE IN-BIKE
+La bicicleta | B13 | se ha transferido de la estacion | ESTACION PARQUE ESPINOSA | a | ESTACION SAN BURITICA |
+La bicicleta | B14 | se ha transferido de la estacion | ESTACION PARQUE ESPINOSA | a | ESTACION SAN BURITICA |
+
+entonces se mostrara eso mismo si se entra en la casilla correspondiente, si no, saldra el mensaje
+"No se ha realizado el proceso aun, realicelo y vuelva"

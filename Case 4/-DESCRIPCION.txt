@@ -1,0 +1,13 @@
+En el Case 4 se hace la devolucion
+
+En el historial aparece en orden su inicio y su finalizacion
+HISTORIAL DE MODIFICACIONES GENERALES DE IN-BIKE
+La bicicleta | B01 | tiene estado de prestamo | INICIADO | por el cliente SERGIO ALEJANDRO  
+La bicicleta | B01 | tiene estado de prestamo | COMPLETADO | por el cliente SERGIO ALEJANDRO
+
+Prestamo se vera FINALIZADO
+prestamoID,clienteID,biciID,estacionOrigen,inicio,estacionDestino,fin,total,estadoPrestamo
+PR001,C01,B01,E01,2026-11-11-20:00,2,2026-11-11-21:00,60,FINALIZADO
+
+
+Y los demas archivos correspondientes se modificaran acorde a lo que ocurre

@@ -1,0 +1,43 @@
+Igual que en el Case 1, se puede ir operando, prestando las bicicletas de manera adecuada y solamente las que estan con alguna bicicleta
+
+El archivo de los anclajes es este:
+estacionID,filas,columnas
+E01,1,1,BICI,B01
+E01,1,2,BICI,B02
+E01,1,3,BICI,B03
+E01,1,4,BICI,B04
+E01,1,5,VACIO,VACIO
+E01,2,1,BICI,B05
+E01,2,2,BICI,B06
+E01,2,3,BICI,B07
+E01,2,4,BICI,B08
+E01,2,5,VACIO,VACIO
+ETC.....
+
+Si se presta la bicicleta con la coordenada 1,1, entonces debera aparecer
+E01,1,1,VACIO,VACIO
+
+Y en el archivo de bicicletas que es este:
+biciID,estadoBici,estacionActual
+B01,DISPONIBLE,E01
+B02,DISPONIBLE,E01
+B03,DISPONIBLE,E01
+B04,DISPONIBLE,E01
+B05,DISPONIBLE,E01
+B06,DISPONIBLE,E01
+B07,DISPONIBLE,E01
+B08,DISPONIBLE,E01
+B09,DISPONIBLE,E01
+B10,DISPONIBLE,E01
+ETC....
+
+en la bicicleta "B01" aparecera en "DISPONIBLE" cambiara a "EN_USO"
+
+Clientes se creara con el siguiente formato:
+clienteID,nombre,prestamoActivo
+C01,SERGIO BURITICA,True
+
+Al igual que historial, con el siguiente formato:
+HISTORIAL DE MODIFICACIONES GENERALES DE IN-BIKE
+La bicicleta | B02 | tiene estado de prestamo | INICIADO | por el cliente SERGIO BURITICA
+

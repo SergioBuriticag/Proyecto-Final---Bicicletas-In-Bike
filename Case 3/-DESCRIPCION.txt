@@ -1,0 +1,17 @@
+En el Case 3 se mostrara los prestamos activos con el archivo de bicicletas
+
+El archivo de bicicletas debera de tener activos de la siguiente manera:
+biciID,estadoBici,estacionActual
+B01,EN_USO,NINGUNA
+B02,EN_USO,NINGUNA
+B03,EN_USO,NINGUNA
+B04,DISPONIBLE,E01
+B05,DISPONIBLE,E01
+
+el EN_USO hace que se despliegue de manera didactica la tabla de el Case 3
+
+El archivo de prestamo es
+prestamoID,clienteID,biciID,estacionOrigen,inicio,estacionDestino,fin,total,estadoPrestamo
+PR001,C01,B04,E01,2026-11-11-20:00,,,,ACTIVO
+
+Se crea de manera automatica
