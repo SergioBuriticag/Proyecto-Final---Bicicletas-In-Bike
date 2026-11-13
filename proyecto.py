@@ -9,12 +9,12 @@ def actualizacionMatrices():
         matriz2 = ""
         matriz3 = ""
         encabezado = ""
+        matriz = []
+        componenteMatriz = []
 
         with open("logica de programacion U/- PROYECTO FINAL/estacion.csv", "r", encoding="utf-8") as Archivo_Estacion:
             encabezado = Archivo_Estacion.readline()
             informacionEstacion = csv.reader(Archivo_Estacion)
-            matriz = []
-            componenteMatriz = []
             for comparacionEstacion in informacionEstacion:
                 with open("logica de programacion U/- PROYECTO FINAL/anclajes.csv", "r", encoding="utf-8") as Archivo_Anclaje:
                     Archivo_Anclaje.readline()
@@ -132,7 +132,7 @@ def calcularCosto(hora1:int, minuto1:int, hora2:int, minuto2:int):
     
     except Exception as e:
         return f"Error en la función \"Calcular Costos\""
-    
+
 def cantidadBicicletas(matrizEstacion:list):
     try:
         bicis = 0
@@ -145,35 +145,37 @@ def cantidadBicicletas(matrizEstacion:list):
         return e
 
 def sugerirRedistribuciones(estacion1:int, estacion2:int, estacion3:int):
-    
-    presta = ""
-    codigoPresta = ""
-    recibe = ""
-    codigoRecibe = ""
-    
-    if estacion1 >= 6:
-        presta = "ESTACION SAN BURITICA"
-        codigoPresta = "E01"
-    elif estacion2 >= 6:
-        presta = "ESTACION PARQUE ESPINOSA"
-        codigoPresta = "E02"
-    elif estacion3 >= 6:
-        presta = "ESTACION UPB"
-        codigoPresta = "E03"
-
-    if estacion1 < 3:
-        recibe = "ESTACION SAN BURITICA"
-        codigoRecibe = "E01"
-    elif estacion2 < 3:
-        recibe = "ESTACION PARQUE ESPINOSA"
-        codigoRecibe = "E02"
-    elif estacion3 < 3:
-        recibe = "ESTACION UPB"
-        codigoRecibe = "E03"
-    else:
-        codigoRecibe = "NO APLICA"
+    try:
+        presta = ""
+        codigoPresta = ""
         recibe = ""
-    return presta, codigoPresta, recibe, codigoRecibe
+        codigoRecibe = ""
+        
+        if estacion1 >= 6:
+            presta = "ESTACION SAN BURITICA"
+            codigoPresta = "E01"
+        elif estacion2 >= 6:
+            presta = "ESTACION PARQUE ESPINOSA"
+            codigoPresta = "E02"
+        elif estacion3 >= 6:
+            presta = "ESTACION UPB"
+            codigoPresta = "E03"
+
+        if estacion1 < 3:
+            recibe = "ESTACION SAN BURITICA"
+            codigoRecibe = "E01"
+        elif estacion2 < 3:
+            recibe = "ESTACION PARQUE ESPINOSA"
+            codigoRecibe = "E02"
+        elif estacion3 < 3:
+            recibe = "ESTACION UPB"
+            codigoRecibe = "E03"
+        else:
+            codigoRecibe = "NO APLICA"
+            recibe = ""
+        return presta, codigoPresta, recibe, codigoRecibe
+    except Exception as e:
+        return f"Error en la función \"calcularCostos\": {e}"
 
 #Apartado Principal
 
@@ -339,10 +341,11 @@ try:
     rankingEstacion1 = 0
     rankingEstacion2 = 0
     rankingEstacion3 = 0
-    noExiste = True
+    codigoRanking1 = 0
+    codigoRanking2 = 0
+    codigoRanking3 = 0
+    encontrado = False
     
-    
-
     #Proceso
 
     while True:
@@ -1041,166 +1044,182 @@ Esta estacion recibira bicicletas de:
                 try:
                     with open("logica de programacion U/- PROYECTO FINAL/historial_General.txt","r",encoding="utf-8",newline="") as Archivo_Historial_General:
                         contenidoArchivoGeneral = Archivo_Historial_General.read()
-                        print("""
----------------------------------------------------------------
-                HISTORIAL DE REGISTROS
----------------------------------------------------------------
-Escoja un indice para verificar el historial especificado:
-1. Prestamos
-2. Devoluciones
-3. Prestamos y Devoluciones
-4. Mantenimientos
-5. Reactivaciones
-6. Matenimientos y Reactivaciones
-7. Transeferencias
-8. Ranking de estaciones
+                    print("""
+    ---------------------------------------------------------------
+            HISTORIAL DE REGISTROS
+    ---------------------------------------------------------------
+    Escoja un indice para verificar el historial especificado:
+    1. Prestamos
+    2. Devoluciones
+    3. Prestamos y Devoluciones
+    4. Mantenimientos
+    5. Reactivaciones
+    6. Matenimientos y Reactivaciones
+    7. Transeferencias
+    8. Ranking de estaciones
     """)
-                        while True:
-                            try:
-                                indiceHistorial = int(input("Ingrese el índice del historial que desea consultar -> "))
-                                if not(1 <= indiceHistorial <= 8): raise ValueError
-                                else: break
-                            except ValueError as ve:
-                                print("Opción inexistente. Digite nuevamente su opción")
-                                continue
-                        
-                        match indiceHistorial:
+                    while True:
+                        try:
+                            indiceHistorial = int(input("Ingrese el índice del historial que desea consultar -> "))
+                            if not(1 <= indiceHistorial <= 8): raise ValueError
+                            else: break
+                        except ValueError as ve:
+                            print("Opción inexistente. Digite nuevamente su opción")
+                            continue
+                    encontrado = False
+                    match indiceHistorial:
+                        case 1:
+                            for lineaPrestamoIniciado in contenidoArchivoGeneral.splitlines():
+                                datosPrestamoIniciado = lineaPrestamoIniciado.split("|")
+                                if len(datosPrestamoIniciado) == 5:
+                                    if datosPrestamoIniciado[3].strip() == "INICIADO":
+                                        encontrado = True
+                                        print(lineaPrestamoIniciado)
+                            if encontrado == False:
+                                print("No se ha realizado el proceso aun, realicelo y vuelva")
+                            print("Volviendo al menú principal...")
+                            time.sleep(3)
+
+                        case 2:
+                            for lineaDevolucionCompletada in contenidoArchivoGeneral.splitlines():
+                                datosDevolucionCompletada = lineaDevolucionCompletada.split("|")
+                                if len(datosDevolucionCompletada) == 5:
+                                    if datosDevolucionCompletada[3].strip() == "COMPLETADO":
+                                        print(lineaDevolucionCompletada)
+                                        encontrado = True
+                            if encontrado == False:
+                                print("No se ha realizado el proceso aun, realicelo y vuelva")
+                            print("Volviendo al menú principal...")
+                            time.sleep(3)
+
+                        case 3:
+                            cadenasPrestamosDevoluciones = contenidoArchivoGeneral.splitlines()
+                            for posicionPrestamo in range(len(cadenasPrestamosDevoluciones)):
+                                lineaPrestamo = cadenasPrestamosDevoluciones[posicionPrestamo]
+                                datosPrestamo = lineaPrestamo.split("|")
+                                for posicionDevolucion in range(posicionPrestamo + 1, len(cadenasPrestamosDevoluciones)):
+                                    lineaDevolucion = cadenasPrestamosDevoluciones[posicionDevolucion]
+                                    datosDevolucion = lineaDevolucion.split("|")
+                                    if len(datosPrestamo) == 5 and len(datosDevolucion) == 5:
+                                        if (datosPrestamo[1].strip() == datosDevolucion[1].strip() and datosPrestamo[4].strip() == datosDevolucion[4].strip()):
+                                            if datosPrestamo[3].strip() == "INICIADO" and datosDevolucion[3].strip() == "COMPLETADO":
+                                                encontrado = True
+                                                print(lineaPrestamo)
+                                                print(lineaDevolucion)
+                            if encontrado == False:
+                                print("No se ha realizado el proceso aun, realicelo y vuelva")
+                            print("Volviendo al menú principal...")
+                            time.sleep(3)
                             
-                            case 1:
-                                for lineaPrestamoIniciado in contenidoArchivoGeneral.splitlines():
-                                    datosPrestamoIniciado = lineaPrestamoIniciado.split("|")
-                                    if len(datosPrestamoIniciado) == 5:
-                                        if datosPrestamoIniciado[3].strip() == "INICIADO":
-                                            print(lineaPrestamoIniciado)
-                                    else:
-                                        print("No se ha realizado el proceso aun, realicelo y vuelva")
-
-                            case 2:
-                                for lineaDevolucionCompletada in contenidoArchivoGeneral.splitlines():
-                                    datosDevolucionCompletada = lineaDevolucionCompletada.split("|")
-                                    if len(datosDevolucionCompletada) == 5:
-                                        if datosDevolucionCompletada[3].strip() == "COMPLETADO":
-                                            print(lineaDevolucionCompletada)
-                                    else:
-                                        print("No se ha realizado el proceso aun, realicelo y vuelva")
-
-                            case 3:
-                                cadenasPrestamosDevoluciones = contenidoArchivoGeneral.splitlines()
-                                for posicionPrestamo in range(len(cadenasPrestamosDevoluciones)):
-                                    lineaPrestamo = cadenasPrestamosDevoluciones[posicionPrestamo]
-                                    datosPrestamo = lineaPrestamo.split("|")
-                                    for posicionDevolucion in range(posicionPrestamo + 1, len(cadenasPrestamosDevoluciones)):
-                                        lineaDevolucion = cadenasPrestamosDevoluciones[posicionDevolucion]
-                                        datosDevolucion = lineaDevolucion.split("|")
-                                        if len(datosPrestamo) == 5 and len(datosDevolucion) == 5:
-                                            if (datosPrestamo[1].strip() == datosDevolucion[1].strip() and datosPrestamo[4].strip() == datosDevolucion[4].strip()):
-                                                if datosPrestamo[3].strip() == "INICIADO" and datosDevolucion[3].strip() == "COMPLETADO":
-                                                    print(lineaPrestamo)
-                                                    print(lineaDevolucion)
-                                    else:
-                                        print("No se ha realizado el proceso aun, realicelo y vuelva")
-                                        
-                            case 4:
-                                for lineaMantenimiento in contenidoArchivoGeneral.splitlines():
-                                    datosMantenimiento = lineaMantenimiento.split("|")
-                                    if len(datosMantenimiento) == 5:
-                                        if datosMantenimiento[3].strip() == "MANTENIMIENTO":
-                                            print(lineaMantenimiento)
-                                    else:
-                                        print("No se ha realizado el proceso aun, realicelo y vuelva")
-                                        
-                            case 5:
-                                for lineaReactivacion in contenidoArchivoGeneral.splitlines():
-                                    datosReactivacion = lineaReactivacion.split("|")
-                                    if len(datosReactivacion) == 5:
-                                        if datosReactivacion[3].strip() == "REACTIVACION":
-                                            print(lineaReactivacion)
-                                    else:
-                                        print("No se ha realizado el proceso aun, realicelo y vuelva")
-                                        
-                            case 6:
-                                cadenasMantenimientosReactivaciones = contenidoArchivoGeneral.splitlines()
-                                for posicionMantenimiento in range(len(cadenasMantenimientosReactivaciones)):
-                                    lineaMantenimiento = cadenasMantenimientosReactivaciones[posicionMantenimiento]
-                                    datosMantenimiento = lineaMantenimiento.split("|")
-                                    for posicionReactivacion in range(posicionMantenimiento + 1, len(cadenasMantenimientosReactivaciones)):
-                                        lineaReactivacion = cadenasMantenimientosReactivaciones[posicionReactivacion]
-                                        datosReactivacion = lineaReactivacion.split("|")
-                                        if len(datosMantenimiento) == 5 and len(datosReactivacion) == 5:
-                                            if (datosMantenimiento[0].strip() == datosReactivacion[0].strip() and datosMantenimiento[1].strip() == datosReactivacion[1].strip()):
-                                                if datosMantenimiento[3].strip() == "MANTENIMIENTO" and datosReactivacion[3].strip() == "REACTIVACION":
-                                                    print(lineaMantenimiento)
-                                                    print(lineaReactivacion)
-                                    else:
-                                        print("No se ha realizado el proceso aun, realicelo y vuelva")
-                                        
-                            case 7:
-                                noExiste2 = True
-                                for lineaTransferencia in contenidoArchivoGeneral.splitlines():
-                                    datosTransferencia = lineaTransferencia.split("|")
-                                    if len(datosTransferencia) == 7:
-                                        if datosTransferencia[2].strip() == "se ha transferido de la estacion":
-                                            print(lineaTransferencia)
-                                            noExiste2 = False
-                                if noExiste2 == True:    
-                                    print("No se ha realizado el proceso aun, realicelo y vuelva")
-                            case 8: 
-                                noExiste = True
-                                print("""
-    --------------------------------------------------
-                RANKING ESTACIONES
-    --------------------------------------------------
-    El orden de las estaciones segun la cantidad de
-    prestamos es:""")
-                                nombreCSV = "prestamo"
-                                informacionRanking, _ = leerArchivo(nombreCSV)
-                                rankingEstacion1 = 0
-                                rankingEstacion2 = 0
-                                rankingEstacion3 = 0
-                                for recorridoRanking in informacionRanking:
-                                    if recorridoRanking[3] == "E01":
-                                        rankingEstacion1 += 1
-                                        codigoRanking1 = "E01"
-                                    elif recorridoRanking[3] == "E02":
-                                        rankingEstacion2 += 1
-                                        codigoRanking2 = "E02"
-                                    elif recorridoRanking[3] == "E03":
-                                        rankingEstacion3 += 1
-                                        codigoRanking3 = "E03"
-                                    else:
-                                        noExiste = True
+                        case 4:
+                            for lineaMantenimiento in contenidoArchivoGeneral.splitlines():
+                                datosMantenimiento = lineaMantenimiento.split("|")
+                                if len(datosMantenimiento) == 5:
+                                    if datosMantenimiento[3].strip() == "MANTENIMIENTO":
+                                        encontrado = True
+                                        print(lineaMantenimiento)
+                            if encontrado == False:
+                                print("No se ha realizado el proceso aun, realicelo y vuelva")
+                            print("Volviendo al menú principal...")
+                            time.sleep(3)
                                     
-                                    if noExiste != True:
-                                        if rankingEstacion1 >= rankingEstacion2 and rankingEstacion1 >= rankingEstacion3:
-                                            print(f"1. {codigoRanking1}: {rankingEstacion1} prestamos")
-                                            if rankingEstacion2 >= rankingEstacion3:
-                                                print(f"2. {codigoRanking2}: {rankingEstacion2} prestamos")
-                                                print(f"3. {codigoRanking3}: {rankingEstacion3} prestamos")
-                                            else:
-                                                print(f"2. {codigoRanking3}: {rankingEstacion3} prestamos")
-                                                print(f"3. {codigoRanking2}: {rankingEstacion2} prestamos")
-                                        elif rankingEstacion2 >= rankingEstacion1 and rankingEstacion2 >= rankingEstacion3:
-                                            print(f"1. {codigoRanking2}: {rankingEstacion2} prestamos")
-                                            if rankingEstacion1 >= rankingEstacion3:
-                                                print(f"2. {codigoRanking1}: {rankingEstacion1} prestamos")
-                                                print(f"3. {codigoRanking3}: {rankingEstacion3} prestamos")
-                                            else:
-                                                print(f"2. {codigoRanking3}: {rankingEstacion3} prestamos")
-                                                print(f"3. {codigoRanking1}: {rankingEstacion1} prestamos")
-                                        else:
-                                            print(f"1. {codigoRanking3}: {rankingEstacion3} prestamos")
-                                            if rankingEstacion1 >= rankingEstacion2:
-                                                print(f"2. {codigoRanking1}: {rankingEstacion1} prestamos")
-                                                print(f"3. {codigoRanking2}: {rankingEstacion2} prestamos")
-                                            else:
-                                                print(f"2. {codigoRanking2}: {rankingEstacion2} prestamos")
-                                                print(f"3. {codigoRanking1}: {rankingEstacion1} prestamos")
-                                    else:
-                                        print("No se ha realizado el proceso aun, realicelo y vuelva")
+                        case 5:
+                            for lineaReactivacion in contenidoArchivoGeneral.splitlines():
+                                datosReactivacion = lineaReactivacion.split("|")
+                                if len(datosReactivacion) == 5:
+                                    if datosReactivacion[3].strip() == "REACTIVACION":
+                                        encontrado = True
+                                        print(lineaReactivacion)
+                            if encontrado == False:
+                                print("No se ha realizado el proceso aun, realicelo y vuelva")
+                            print("Volviendo al menú principal...")
+                            time.sleep(3)
+                                    
+                        case 6:
+                            cadenasMantenimientosReactivaciones = contenidoArchivoGeneral.splitlines()
+                            for posicionMantenimiento in range(len(cadenasMantenimientosReactivaciones)):
+                                lineaMantenimiento = cadenasMantenimientosReactivaciones[posicionMantenimiento]
+                                datosMantenimiento = lineaMantenimiento.split("|")
+                                for posicionReactivacion in range(posicionMantenimiento + 1, len(cadenasMantenimientosReactivaciones)):
+                                    lineaReactivacion = cadenasMantenimientosReactivaciones[posicionReactivacion]
+                                    datosReactivacion = lineaReactivacion.split("|")
+                                    if len(datosMantenimiento) == 5 and len(datosReactivacion) == 5:
+                                        if (datosMantenimiento[0].strip() == datosReactivacion[0].strip() and datosMantenimiento[1].strip() == datosReactivacion[1].strip()):
+                                            if datosMantenimiento[3].strip() == "MANTENIMIENTO" and datosReactivacion[3].strip() == "REACTIVACION":
+                                                encontrado = True
+                                                print(lineaMantenimiento)
+                                                print(lineaReactivacion)
+                            if encontrado == False:
+                                print("No se ha realizado el proceso aun, realicelo y vuelva")
+                            print("Volviendo al menú principal...")
+                            time.sleep(3)
+                                    
+                        case 7:
+                            for lineaTransferencia in contenidoArchivoGeneral.splitlines():
+                                datosTransferencia = lineaTransferencia.split("|")
+                                if len(datosTransferencia) == 7:
+                                    if datosTransferencia[2].strip() == "se ha transferido de la estacion":
+                                        encontrado = True
+                                        print(lineaTransferencia)
+                            if encontrado == False:
+                                print("No se ha realizado el proceso aun, realicelo y vuelva")
+                            print("Volviendo al menú principal...")
+                            time.sleep(3)
 
+                        case 8: 
+                            print("""
+--------------------------------------------------
+               RANKING ESTACIONES
+--------------------------------------------------
+El orden de las estaciones segun la cantidad de
+prestamos es:""")
+                            nombreCSV = "prestamo"
+                            informacionRanking, _ = leerArchivo(nombreCSV)
+                            rankingEstacion1 = 0
+                            rankingEstacion2 = 0
+                            rankingEstacion3 = 0
+                            for recorridoRanking in informacionRanking:
+                                if recorridoRanking[3] == "E01":
+                                    rankingEstacion1 += 1
+                                    codigoRanking1 = "E01"
+                                elif recorridoRanking[3] == "E02":
+                                    rankingEstacion2 += 1
+                                    codigoRanking2 = "E02"
+                                elif recorridoRanking[3] == "E03":
+                                    rankingEstacion3 += 1
+                                    codigoRanking3 = "E03"
                                 
-                except FileNotFoundError as fe:
+                            if rankingEstacion1 >= rankingEstacion2 and rankingEstacion1 >= rankingEstacion3:
+                                print(f"1. {codigoRanking1}: {rankingEstacion1} prestamos")
+                                if rankingEstacion2 >= rankingEstacion3:
+                                    print(f"2. {codigoRanking2}: {rankingEstacion2} prestamos")
+                                    print(f"3. {codigoRanking3}: {rankingEstacion3} prestamos")
+                                else:
+                                    print(f"2. {codigoRanking3}: {rankingEstacion3} prestamos")
+                                    print(f"3. {codigoRanking2}: {rankingEstacion2} prestamos")
+                            elif rankingEstacion2 >= rankingEstacion1 and rankingEstacion2 >= rankingEstacion3:
+                                print(f"1. {codigoRanking2}: {rankingEstacion2} prestamos")
+                                if rankingEstacion1 >= rankingEstacion3:
+                                    print(f"2. {codigoRanking1}: {rankingEstacion1} prestamos")
+                                    print(f"3. {codigoRanking3}: {rankingEstacion3} prestamos")
+                                else:
+                                    print(f"2. {codigoRanking3}: {rankingEstacion3} prestamos")
+                                    print(f"3. {codigoRanking1}: {rankingEstacion1} prestamos")
+                            else:
+                                print(f"1. {codigoRanking3}: {rankingEstacion3} prestamos")
+                                if rankingEstacion1 >= rankingEstacion2:
+                                    print(f"2. {codigoRanking1}: {rankingEstacion1} prestamos")
+                                    print(f"3. {codigoRanking2}: {rankingEstacion2} prestamos")
+                                else:
+                                    print(f"2. {codigoRanking2}: {rankingEstacion2} prestamos")
+                                    print(f"3. {codigoRanking1}: {rankingEstacion1} prestamos")
+                            
+                except TypeError as fe:
                     print("Aun no existe ningun historial, realiza otras operaciones para empezar a agregar contenido")
+                print("Volviendo al menú principal...")
+                time.sleep(3)
+
+                    
             case 0:
                 print("""
                   ____  ____      _     ____   ___     _     ____     ____    ___   ____      _   _  ____      _     ____  
